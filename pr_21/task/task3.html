@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .success {
+            color: green;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    
+    <label for="phone">Номер телефона:</label>
+    <input type="tel" id="phone" placeholder="+7XXXXXXXXXX">
+    <button onclick="checkPhone()">Проверить номер</button>
+    
+    <p id="result"></p>
+
+    <script>
+        function checkPhone() {
+            let phoneNumber = document.getElementById("phone").value.trim();
+            let resultParagraph = document.getElementById("result");
+            resultParagraph.className = "";
+            resultParagraph.textContent = "";
+
+            if (phoneNumber === "") {
+                resultParagraph.textContent = "Ошибка: Номер телефона не может быть пустым.";
+                resultParagraph.className = "error";
+                return;
+            }
+            let length = phoneNumber.length;
+            let isValidLength = (length === 12 && phoneNumber[0] === "+") || 
+                                (length === 11) || 
+                                (length === 10);
+                                
+            if (!isValidLength) {
+                resultParagraph.textContent = "Ошибка: Неверная длина. Допустимо: +7 и 10 цифр (12 симв.), 8 и 10 цифр (11 симв.) или просто 10 цифр.";
+                resultParagraph.className = "error";
+                return;
+            }
+            let cleanedNumber = phoneNumber;
+            if (cleanedNumber[0] === "+") {
+                cleanedNumber = cleanedNumber.slice(1);
+            }
+            for (let i = 0; i < cleanedNumber.length; i++) {
+                if (cleanedNumber[i] < "0" || cleanedNumber[i] > "9") {
+                    resultParagraph.textContent = "Ошибка: Номер должен содержать только цифры (и плюс в самом начале, если он есть).";
+                    resultParagraph.className = "error";
+                    return;
+                }
+            }
+            if (length === 12 && phoneNumber.slice(0, 2) !== "+7") {
+                resultParagraph.textContent = "Ошибка: 12-значный номер должен начинаться с '+7'.";
+                resultParagraph.className = "error";
+                return;
+            }
+            if (length === 11 && phoneNumber[0] !== "8") {
+                resultParagraph.textContent = "Ошибка: 11-значный номер должен начинаться с '8'.";
+                resultParagraph.className = "error";
+                return;
+            }
+            resultParagraph.textContent = "Номер телефона верный";
+            resultParagraph.className = "success";
+        }
+    </script>
+
+</body>
+</html>
